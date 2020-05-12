@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import LoginForm from '../components/LoginForm';
 
 const Home = () => (
   <div>
@@ -9,7 +10,8 @@ const Home = () => (
       <li><a href='https://facebook.github.io/react/'>React</a> and <a href='https://redux.js.org/'>Redux</a> for client-side code</li>
       <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
     </ul>
-    <p>Click "Login" to see more...</p>
+        <p>Click "Login" to see more...</p>
+        <LoginForm formData="someone@nowhere.com" />
   </div>
 );
 
