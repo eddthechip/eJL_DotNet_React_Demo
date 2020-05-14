@@ -3,105 +3,120 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store';
 
-// State details for the Login form
-type LoginFormState = {
-    formData: string, // Contains login form data
-    errors: {}, // Contains login field errors
-    formSubmitted: false, // Indicates submit status of login form
-    loading: false // Indicates in progress state of login form
+// State structure for the LoginForm
+/* Define an interface for all component properties
+ * Use syntax parameter?: to make the property optional */
+interface LoginFormProps {
+    crewID: string,      // Crew ID (number or null)
+    password?: string,
+    errors: {                   // Login field errors
+        loginError: boolean,
+        crewIDError: string,
+        passwordError: string
+    },
+    formSubmitted?: false,       // Indicates submit status of login form
+    loading?: false              // Indicates in progress state of login form
 }
 
-class LoginForm extends React.Component<LoginFormState> {
+export default class LoginForm extends React.Component<LoginFormProps> {
 
-    constructor(props: LoginFormState) {
+    constructor(props: LoginFormProps) {
         super(props)
-    }
 
-    static defaultProps = {
-        formData: "noone@nowhere.com",
-        errors: "perfect",
-        formSubmitted: false,
-        loading: false
-    }
-
-    /*handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        let { formData } = this.state;
-        formData[name] = value;
-
-        this.setState({
-            formData: formData
-        });
-    }
-
-    validateLoginForm = (e) => {
-
-        let errors = {};
-        const { formData } = this.state;
-
-        if (isEmpty(formData.email)) {
-            errors.email = "Email can't be blank";
-        } else if (!isEmail(formData.email)) {
-            errors.email = "Please enter a valid email";
+        // LoginForm defaults
+        this.state = {
+            crewID: '',
+            password: '',
+            errors: {
+                loginError: false,
+                crewIDError: '',
+                passwordError: ''
+            },
+            formSubmitted: false,
+            loading: false
         }
 
-        if (isEmpty(formData.password)) {
-            errors.password = "Password can't be blank";
-        } else if (isContainWhiteSpace(formData.password)) {
-            errors.password = "Password should not contain white spaces";
-        } else if (!isLength(formData.password, { gte: 6, lte: 16, trim: true })) {
-            errors.password = "Password's length must between 6 to 16";
-        }
-
-        if (isEmpty(errors)) {
-            return true;
-        } else {
-            return errors;
-        }
+        // You have to bind the instance of this to each function that needs it
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
 
-    login = (e) => {
+    //  In a traditional DOM (browser), input elements are rendered and the browser manages the state 
+    // (its rendered value).As a result, the state of the actual DOM will differ from that of the 
+    // component.This is not ideal as the state of the view will differ from that of the component.
+    // In React, components should always represent the state of the view and not only at the point of
+    // initialization. To enforce that, functions like this are used to automatically update the
+    // component's state whenever it changes.
+    handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Store the name and value of the inputbox that fired the event
+        const { name, value } = e.target;
 
+        // Update the state nodes with the values
+        this.setState({ [name]: value });
+    }
+
+    handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+        // Stop the HTML element from sending a POST request
         e.preventDefault();
 
-        // let errors = this.validateLoginForm();
+        // Clear existing errors
+        this.setState({
+            errors: {
+                loginError: false,
+                crewIDError: '',
+                passwordError: ''
+            }
+        });
 
-        if (errors === true) {
-            alert("You are successfully signed in...");
-            window.location.reload()
-        } else {
+        // Sanitise and check the crewID
+        if (this.props.crewID === null) {
             this.setState({
-                errors: errors,
+                errors: {
+                    loginError: true,
+                    crewIDError: "Crew ID can't be blank"
+                }
+            })
+        }
+        else if (isNaN(parseInt(this.props.crewID))) {
+            this.setState({
+                errors: {
+                    loginError: true,
+                    crewIDError: "Crew ID must be a number"
+                }
+            })
+        }
+
+        // Sanitise and check the password
+        if (this.props.password === null || this.props.password === '') {
+            this.setState({
+                errors: {
+                    loginError: true,
+                    passwordError: "Password can't be blank"
+                }
+            })
+        }
+
+        if (this.props.errors.loginError) {
+            console.log("Good login credentials entered");
+            // Message box confirming success, plus re-reoute the page to the Journey Log
+            window.location.reload()
+        }
+        else {
+            console.log(this.props.errors.crewIDError + ' yh got here ' + this.props.errors.passwordError);
+            this.setState({
                 formSubmitted: true
             });
         }
-    }*/
+    }
 
     render() {
-
-        /*const { errors, formSubmitted } = this.state;
-        
         return (
             <div className="Login">
-                <form onSubmit={this.login}>
+                <form onSubmit={this.handleLogin}>
                     <label>Email</label>
-                    <input type="text" name="email" placeholder="Enter your email" onChange={this.handleInputChange} />
+                    <input type="text" name="crewID" placeholder="Enter your crew ID" onChange={this.handleInputChange} />
                     <label>Password</label>
                     <input type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
-                    <button type="submit">Sign-In</button>
-                </form>
-            </div>
-        )*/
-        return (
-            <div className="Login">
-                <form>
-                    <label>Email</label>
-                    <input type="text" name="email" placeholder="Enter your email" value={this.props.formData} />
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Enter your password" />
                     <button type="submit">Sign-In</button>
                 </form>
             </div>
@@ -109,4 +124,4 @@ class LoginForm extends React.Component<LoginFormState> {
     }
 }
 
-export default LoginForm;
+//export default LoginForm;

@@ -17,92 +17,97 @@ var React = require("react");
 var LoginForm = /** @class */ (function (_super) {
     __extends(LoginForm, _super);
     function LoginForm(props) {
-        return _super.call(this, props) || this;
-    }
-    /*handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        let { formData } = this.state;
-        formData[name] = value;
-
-        this.setState({
-            formData: formData
-        });
-    }
-
-    validateLoginForm = (e) => {
-
-        let errors = {};
-        const { formData } = this.state;
-
-        if (isEmpty(formData.email)) {
-            errors.email = "Email can't be blank";
-        } else if (!isEmail(formData.email)) {
-            errors.email = "Please enter a valid email";
-        }
-
-        if (isEmpty(formData.password)) {
-            errors.password = "Password can't be blank";
-        } else if (isContainWhiteSpace(formData.password)) {
-            errors.password = "Password should not contain white spaces";
-        } else if (!isLength(formData.password, { gte: 6, lte: 16, trim: true })) {
-            errors.password = "Password's length must between 6 to 16";
-        }
-
-        if (isEmpty(errors)) {
-            return true;
-        } else {
-            return errors;
-        }
-    }
-
-    login = (e) => {
-
-        e.preventDefault();
-
-        // let errors = this.validateLoginForm();
-
-        if (errors === true) {
-            alert("You are successfully signed in...");
-            window.location.reload()
-        } else {
-            this.setState({
-                errors: errors,
-                formSubmitted: true
+        var _this = _super.call(this, props) || this;
+        //  In a traditional DOM (browser), input elements are rendered and the browser manages the state 
+        // (its rendered value).As a result, the state of the actual DOM will differ from that of the 
+        // component.This is not ideal as the state of the view will differ from that of the component.
+        // In React, components should always represent the state of the view and not only at the point of
+        // initialization. To enforce that, functions like this are used to automatically update the
+        // component's state whenever it changes.
+        _this.handleInputChange = function (e) {
+            var _a;
+            // Store the name and value of the inputbox that fired the event
+            var _b = e.target, name = _b.name, value = _b.value;
+            // Update the state nodes with the values
+            _this.setState((_a = {}, _a[name] = value, _a));
+        };
+        _this.handleLogin = function (e) {
+            // Stop the HTML element from sending a POST request
+            e.preventDefault();
+            // Clear existing errors
+            _this.setState({
+                errors: {
+                    loginError: false,
+                    crewIDError: '',
+                    passwordError: ''
+                }
             });
-        }
-    }*/
+            // Sanitise and check the crewID
+            if (_this.props.crewID === null) {
+                _this.setState({
+                    errors: {
+                        loginError: true,
+                        crewIDError: "Crew ID can't be blank"
+                    }
+                });
+            }
+            else if (isNaN(parseInt(_this.props.crewID))) {
+                _this.setState({
+                    errors: {
+                        loginError: true,
+                        crewIDError: "Crew ID must be a number"
+                    }
+                });
+            }
+            // Sanitise and check the password
+            if (_this.props.password === null || _this.props.password === '') {
+                _this.setState({
+                    errors: {
+                        loginError: true,
+                        passwordError: "Password can't be blank"
+                    }
+                });
+            }
+            if (_this.props.errors.loginError) {
+                console.log("Good login credentials entered");
+                // Message box confirming success, plus re-reoute the page to the Journey Log
+                window.location.reload();
+            }
+            else {
+                console.log(_this.props.errors.crewIDError + ' yh got here ' + _this.props.errors.passwordError);
+                _this.setState({
+                    formSubmitted: true
+                });
+            }
+        };
+        // LoginForm defaults
+        _this.state = {
+            crewID: '',
+            password: '',
+            errors: {
+                loginError: false,
+                crewIDError: '',
+                passwordError: ''
+            },
+            formSubmitted: false,
+            loading: false
+        };
+        // You have to bind the instance of this to each function that needs it
+        _this.handleInputChange = _this.handleInputChange.bind(_this);
+        _this.handleLogin = _this.handleLogin.bind(_this);
+        return _this;
+    }
     LoginForm.prototype.render = function () {
-        /*const { errors, formSubmitted } = this.state;
-        
-        return (
-            <div className="Login">
-                <form onSubmit={this.login}>
-                    <label>Email</label>
-                    <input type="text" name="email" placeholder="Enter your email" onChange={this.handleInputChange} />
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
-                    <button type="submit">Sign-In</button>
-                </form>
-            </div>
-        )*/
         return (React.createElement("div", { className: "Login" },
-            React.createElement("form", null,
+            React.createElement("form", { onSubmit: this.handleLogin },
                 React.createElement("label", null, "Email"),
-                React.createElement("input", { type: "text", name: "email", placeholder: "Enter your email", value: this.props.formData }),
+                React.createElement("input", { type: "text", name: "crewID", placeholder: "Enter your crew ID", onChange: this.handleInputChange }),
                 React.createElement("label", null, "Password"),
-                React.createElement("input", { type: "password", name: "password", placeholder: "Enter your password" }),
+                React.createElement("input", { type: "password", name: "password", placeholder: "Enter your password", onChange: this.handleInputChange }),
                 React.createElement("button", { type: "submit" }, "Sign-In"))));
-    };
-    LoginForm.defaultProps = {
-        formData: "noone@nowhere.com",
-        errors: "perfect",
-        formSubmitted: false,
-        loading: false
     };
     return LoginForm;
 }(React.Component));
 exports.default = LoginForm;
+//export default LoginForm;
 //# sourceMappingURL=LoginForm.js.map

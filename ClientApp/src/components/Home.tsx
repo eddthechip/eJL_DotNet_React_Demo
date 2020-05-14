@@ -11,7 +11,7 @@ const Home = () => (
       <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
     </ul>
         <p>Click "Login" to see more...</p>
-        <LoginForm formData="someone@nowhere.com" />
+        <LoginForm />
   </div>
 );
 
