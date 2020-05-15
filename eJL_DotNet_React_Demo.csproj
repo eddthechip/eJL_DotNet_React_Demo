@@ -21,10 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\JourneyLog.tsx" />
     <None Remove="ClientApp\src\components\LoginForm.tsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\JourneyLog.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\LoginForm.tsx" />
   </ItemGroup>
 

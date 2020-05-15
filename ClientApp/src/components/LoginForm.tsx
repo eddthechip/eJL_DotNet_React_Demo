@@ -3,22 +3,23 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store';
 
-// State structure for the LoginForm
+// Properties for the LoginForm
 /* Define an interface for all component properties
  * Use syntax parameter?: to make the property optional */
 interface LoginFormProps {
-    crewID: string,      // Crew ID (number or null)
-    password?: string,
-    errors: {                   // Login field errors
-        loginError: boolean,
-        crewIDError: string,
-        passwordError: string
-    },
-    formSubmitted?: false,       // Indicates submit status of login form
-    loading?: false              // Indicates in progress state of login form
+    formSubmitted: boolean,       // Indicates submit status of login form
+    loadingProp: false              // Indicates in progress state of login form
 }
 
-export default class LoginForm extends React.Component<LoginFormProps> {
+interface LoginFormState {
+    crewID: string,
+    password: string,
+    errorMsg: string
+    submitted: boolean,
+    loading: boolean,
+}
+
+export default class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
 
     constructor(props: LoginFormProps) {
         super(props)
@@ -27,12 +28,8 @@ export default class LoginForm extends React.Component<LoginFormProps> {
         this.state = {
             crewID: '',
             password: '',
-            errors: {
-                loginError: false,
-                crewIDError: '',
-                passwordError: ''
-            },
-            formSubmitted: false,
+            errorMsg: '',
+            submitted: false,
             loading: false
         }
 
@@ -52,60 +49,40 @@ export default class LoginForm extends React.Component<LoginFormProps> {
         const { name, value } = e.target;
 
         // Update the state nodes with the values
-        this.setState({ [name]: value });
+        if (name == 'crewID') {
+            this.setState({ crewID: value });
+        } else {
+            this.setState({ password: value });
+        }
     }
 
     handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         // Stop the HTML element from sending a POST request
         e.preventDefault();
+        //const currentState { crewID, password } = this.state;
+        // Clear existing errors    
+        this.setState({ errorMsg: '' });
 
-        // Clear existing errors
-        this.setState({
-            errors: {
-                loginError: false,
-                crewIDError: '',
-                passwordError: ''
-            }
-        });
-
-        // Sanitise and check the crewID
-        if (this.props.crewID === null) {
-            this.setState({
-                errors: {
-                    loginError: true,
-                    crewIDError: "Crew ID can't be blank"
-                }
-            })
+        console.log(this.state.crewID + ' ' + this.state.password);
+        /* Sanitise and check the crewID */
+        if (this.state.crewID === null) {
+            this.setState({ errorMsg: "Crew ID can't be blank" })
         }
-        else if (isNaN(parseInt(this.props.crewID))) {
-            this.setState({
-                errors: {
-                    loginError: true,
-                    crewIDError: "Crew ID must be a number"
-                }
-            })
+        else if (isNaN(parseInt(this.state.crewID))) {
+            this.setState({ errorMsg: "Crew ID must be a number" })
         }
 
         // Sanitise and check the password
-        if (this.props.password === null || this.props.password === '') {
-            this.setState({
-                errors: {
-                    loginError: true,
-                    passwordError: "Password can't be blank"
-                }
-            })
+        if (this.state.password === null || this.state.password === '') {
+            this.setState({ errorMsg: "Password can't be blank" })
         }
 
-        if (this.props.errors.loginError) {
+        if (this.state.errorMsg !== '') {
             console.log("Good login credentials entered");
             // Message box confirming success, plus re-reoute the page to the Journey Log
-            window.location.reload()
-        }
-        else {
-            console.log(this.props.errors.crewIDError + ' yh got here ' + this.props.errors.passwordError);
-            this.setState({
-                formSubmitted: true
-            });
+            //window.location.reload()
+        } else {
+            console.log(this.state.errorMsg + ' yh got here ');
         }
     }
 

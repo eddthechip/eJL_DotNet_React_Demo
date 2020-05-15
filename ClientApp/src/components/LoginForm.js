@@ -25,71 +25,49 @@ var LoginForm = /** @class */ (function (_super) {
         // initialization. To enforce that, functions like this are used to automatically update the
         // component's state whenever it changes.
         _this.handleInputChange = function (e) {
-            var _a;
             // Store the name and value of the inputbox that fired the event
-            var _b = e.target, name = _b.name, value = _b.value;
+            var _a = e.target, name = _a.name, value = _a.value;
             // Update the state nodes with the values
-            _this.setState((_a = {}, _a[name] = value, _a));
+            if (name == 'crewID') {
+                _this.setState({ crewID: value });
+            }
+            else {
+                _this.setState({ password: value });
+            }
         };
         _this.handleLogin = function (e) {
             // Stop the HTML element from sending a POST request
             e.preventDefault();
-            // Clear existing errors
-            _this.setState({
-                errors: {
-                    loginError: false,
-                    crewIDError: '',
-                    passwordError: ''
-                }
-            });
-            // Sanitise and check the crewID
-            if (_this.props.crewID === null) {
-                _this.setState({
-                    errors: {
-                        loginError: true,
-                        crewIDError: "Crew ID can't be blank"
-                    }
-                });
+            //const currentState { crewID, password } = this.state;
+            // Clear existing errors    
+            _this.setState({ errorMsg: '' });
+            console.log(_this.state.crewID + ' ' + _this.state.password);
+            /* Sanitise and check the crewID */
+            if (_this.state.crewID === null) {
+                _this.setState({ errorMsg: "Crew ID can't be blank" });
             }
-            else if (isNaN(parseInt(_this.props.crewID))) {
-                _this.setState({
-                    errors: {
-                        loginError: true,
-                        crewIDError: "Crew ID must be a number"
-                    }
-                });
+            else if (isNaN(parseInt(_this.state.crewID))) {
+                _this.setState({ errorMsg: "Crew ID must be a number" });
             }
             // Sanitise and check the password
-            if (_this.props.password === null || _this.props.password === '') {
-                _this.setState({
-                    errors: {
-                        loginError: true,
-                        passwordError: "Password can't be blank"
-                    }
-                });
+            if (_this.state.password === null || _this.state.password === '') {
+                _this.setState({ errorMsg: "Password can't be blank" });
             }
-            if (_this.props.errors.loginError) {
+            if (_this.state.errorMsg !== '') {
                 console.log("Good login credentials entered");
                 // Message box confirming success, plus re-reoute the page to the Journey Log
-                window.location.reload();
+                //window.location.reload()
             }
             else {
-                console.log(_this.props.errors.crewIDError + ' yh got here ' + _this.props.errors.passwordError);
-                _this.setState({
-                    formSubmitted: true
-                });
+                console.log(_this.state.errorMsg + ' yh got here ');
             }
         };
         // LoginForm defaults
         _this.state = {
             crewID: '',
             password: '',
-            errors: {
-                loginError: false,
-                crewIDError: '',
-                passwordError: ''
-            },
-            formSubmitted: false,
+            errorMsg: '',
+            submitted: false,
             loading: false
         };
         // You have to bind the instance of this to each function that needs it

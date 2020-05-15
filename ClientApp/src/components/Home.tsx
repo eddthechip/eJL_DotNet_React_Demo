@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import LoginForm from '../components/LoginForm';
+import JourneyLog from '../components/JourneyLog';
 
 const Home = () => (
   <div>
@@ -11,7 +11,7 @@ const Home = () => (
       <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
     </ul>
         <p>Click "Login" to see more...</p>
-        <LoginForm />
+        <JourneyLog flightNumber={'BEE502'}/>
   </div>
 );
 
