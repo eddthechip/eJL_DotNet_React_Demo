@@ -50,12 +50,50 @@ var JourneyLog = /** @class */ (function (_super) {
     function JourneyLog(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            flightNumber: _this.props.flightNumber
+            activeSector: 0,
+            blockOffTime: _this.props.sectors[0].scheduleTimeOfDep,
+            blockOnTime: _this.props.sectors[0].scheduleTimeOfArr,
+            arrival: _this.props.sectors[0].arrival
         };
+        // You must bind 'this' to every event function, so it knows what this is!
+        _this.handleChange = _this.handleChange.bind(_this);
+        _this.changeFlight = _this.changeFlight.bind(_this);
         return _this;
     }
+    JourneyLog.prototype.handleChange = function (event) {
+        console.log(event.target.value);
+    };
+    JourneyLog.prototype.changeFlight = function (event, sectorID) {
+        this.setState({
+            activeSector: (sectorID - 500)
+        });
+    };
     JourneyLog.prototype.render = function () {
-        return (React.createElement("h1", null, this.state.flightNumber));
+        var _this = this;
+        // Use the LET keyword to declare a local variable (previously 'var')
+        // Use the CONST keyword to declare a local constant - NB: MUST be initialized at creation and NOT changed!
+        // Create a list of button elements containing a string of the full flight code: callsign + flight number
+        var flightNumbers = this.props.sectors.map(function (sectorKey) {
+            return React.createElement("button", { onClick: function (event) { return _this.changeFlight(event, sectorKey.flightNumber); } }, sectorKey.callsign + sectorKey.flightNumber);
+        });
+        return (React.createElement("div", { className: "sectorRecord" },
+            flightNumbers,
+            React.createElement("h1", null, this.props.sectors[this.state.activeSector].callsign + this.props.sectors[this.state.activeSector].flightNumber),
+            React.createElement("p", null, this.props.sectors[this.state.activeSector].departure),
+            React.createElement("ul", null,
+                React.createElement("li", null,
+                    "Block Off Time:",
+                    React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].scheduleTimeOfDep, onChange: this.handleChange })),
+                React.createElement("li", null,
+                    "Take-off Time:",
+                    React.createElement("input", { type: "text" })),
+                React.createElement("li", null,
+                    "Landing Time:",
+                    React.createElement("input", { type: "text" })),
+                React.createElement("li", null,
+                    "Block On Time:",
+                    React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].scheduleTimeOfArr, onChange: this.handleChange }))),
+            React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].arrival })));
     };
     return JourneyLog;
 }(React.Component));
