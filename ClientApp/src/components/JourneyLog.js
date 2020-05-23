@@ -14,46 +14,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-var reactstrap_1 = require("reactstrap");
-var react_router_dom_1 = require("react-router-dom");
 require("./NavMenu.css");
-var FlightTabs = /** @class */ (function (_super) {
-    __extends(FlightTabs, _super);
-    function FlightTabs() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.state = {
-            isOpen: false
-        };
-        _this.toggle = function () {
-            _this.setState({
-                isOpen: !_this.state.isOpen
-            });
-        };
-        return _this;
-    }
-    FlightTabs.prototype.render = function () {
-        return (React.createElement(reactstrap_1.Container, null,
-            React.createElement(reactstrap_1.NavbarToggler, { onClick: this.toggle, className: "mr-2" }),
-            React.createElement(reactstrap_1.Collapse, { className: "d-sm-inline-flex flex-sm-row-reverse", isOpen: this.state.isOpen, navbar: true },
-                React.createElement("ul", { className: "navbar-nav flex-grow" },
-                    React.createElement(reactstrap_1.NavItem, null,
-                        React.createElement(reactstrap_1.NavLink, { tag: react_router_dom_1.Link, className: "text-dark", to: "/" }, "Home")),
-                    React.createElement(reactstrap_1.NavItem, null,
-                        React.createElement(reactstrap_1.NavLink, { tag: react_router_dom_1.Link, className: "text-dark", to: "/counter" }, "Counter")),
-                    React.createElement(reactstrap_1.NavItem, null,
-                        React.createElement(reactstrap_1.NavLink, { tag: react_router_dom_1.Link, className: "text-dark", to: "/fetch-data" }, "Fetch data"))))));
-    };
-    return FlightTabs;
-}(React.Component));
+var TPicker_1 = require("./TPicker");
 var JourneyLog = /** @class */ (function (_super) {
     __extends(JourneyLog, _super);
     function JourneyLog(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            activeSector: 0,
-            blockOffTime: _this.props.sectors[0].scheduleTimeOfDep,
-            blockOnTime: _this.props.sectors[0].scheduleTimeOfArr,
-            arrival: _this.props.sectors[0].arrival
+            activeSector: props.sectors[0].sectorID,
+            blockOffTime: props.sectors[0].scheduleTimeOfDep,
+            blockOnTime: props.sectors[0].scheduleTimeOfArr,
+            arrival: props.sectors[0].arrival
         };
         // You must bind 'this' to every event function, so it knows what this is!
         _this.handleChange = _this.handleChange.bind(_this);
@@ -65,7 +36,7 @@ var JourneyLog = /** @class */ (function (_super) {
     };
     JourneyLog.prototype.changeFlight = function (event, sectorID) {
         this.setState({
-            activeSector: (sectorID - 500)
+            activeSector: (sectorID)
         });
     };
     JourneyLog.prototype.render = function () {
@@ -74,26 +45,27 @@ var JourneyLog = /** @class */ (function (_super) {
         // Use the CONST keyword to declare a local constant - NB: MUST be initialized at creation and NOT changed!
         // Create a list of button elements containing a string of the full flight code: callsign + flight number
         var flightNumbers = this.props.sectors.map(function (sectorKey) {
-            return React.createElement("button", { onClick: function (event) { return _this.changeFlight(event, sectorKey.flightNumber); } }, sectorKey.callsign + sectorKey.flightNumber);
+            return React.createElement("button", { className: _this.state.activeSector === (sectorKey.sectorID) ? "btn-tab-active" : "btn-tab", onClick: function (event) { return _this.changeFlight(event, sectorKey.sectorID); } }, sectorKey.callsign + sectorKey.flightNumber);
         });
-        return (React.createElement("div", { className: "sectorRecord" },
-            flightNumbers,
-            React.createElement("h1", null, this.props.sectors[this.state.activeSector].callsign + this.props.sectors[this.state.activeSector].flightNumber),
-            React.createElement("p", null, this.props.sectors[this.state.activeSector].departure),
-            React.createElement("ul", null,
-                React.createElement("li", null,
-                    "Block Off Time:",
-                    React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].scheduleTimeOfDep, onChange: this.handleChange })),
-                React.createElement("li", null,
-                    "Take-off Time:",
-                    React.createElement("input", { type: "text" })),
-                React.createElement("li", null,
-                    "Landing Time:",
-                    React.createElement("input", { type: "text" })),
-                React.createElement("li", null,
-                    "Block On Time:",
-                    React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].scheduleTimeOfArr, onChange: this.handleChange }))),
-            React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].arrival })));
+        return (React.createElement("div", null,
+            React.createElement("div", { className: "sector-nav-bar" }, flightNumbers),
+            React.createElement("div", { className: "sector-record" },
+                React.createElement("h1", null, this.props.sectors[this.state.activeSector].callsign + this.props.sectors[this.state.activeSector].flightNumber),
+                React.createElement("p", null, this.props.sectors[this.state.activeSector].departure),
+                React.createElement("ul", null,
+                    React.createElement("li", { className: "input-list" },
+                        "Block Off Time:",
+                        React.createElement(TPicker_1.TPicker, { time: this.props.sectors[this.state.activeSector].scheduleTimeOfDep, changeCallback: this.handleChange })),
+                    React.createElement("li", { className: "input-list" },
+                        "Block Off Time:",
+                        React.createElement(TPicker_1.TPicker, { changeCallback: this.handleChange })),
+                    React.createElement("li", { className: "input-list" },
+                        "Block Off Time:",
+                        React.createElement(TPicker_1.TPicker, { changeCallback: this.handleChange })),
+                    React.createElement("li", { className: "input-list" },
+                        "Block Off Time:",
+                        React.createElement(TPicker_1.TPicker, { time: this.props.sectors[this.state.activeSector].scheduleTimeOfArr, changeCallback: this.handleChange }))),
+                React.createElement("input", { type: "text", value: this.props.sectors[this.state.activeSector].arrival }))));
     };
     return JourneyLog;
 }(React.Component));

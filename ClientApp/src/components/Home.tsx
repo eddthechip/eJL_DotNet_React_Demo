@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import JourneyLog from '../components/JourneyLog';
 
 interface SectorRecord {
+    sectorID: number,
     callsign: string,
     flightNumber: number,
     departure: string,
@@ -13,6 +14,7 @@ interface SectorRecord {
 
 let sectorList: SectorRecord[] = [
     {
+        sectorID: 0,
         callsign: 'BEE',
         flightNumber: 500,
         departure: 'BHX - Birmingham',
@@ -21,6 +23,7 @@ let sectorList: SectorRecord[] = [
         arrival: 'GCI - Guernsey'
     },
     {
+        sectorID: 1,
         callsign: 'BEE',
         flightNumber: 501,
         departure: 'GCI - Guernsey',
@@ -29,6 +32,7 @@ let sectorList: SectorRecord[] = [
         arrival: 'JER - Jersey'
     },
     {
+        sectorID: 2,
         callsign: 'BEE',
         flightNumber: 502,
         departure: 'JER - Jersey',

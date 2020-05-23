@@ -23,9 +23,11 @@
   <ItemGroup>
     <None Remove="ClientApp\src\components\JourneyLog.tsx" />
     <None Remove="ClientApp\src\components\LoginForm.tsx" />
+    <None Remove="ClientApp\src\components\TPicker.tsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\TPicker.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\JourneyLog.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\LoginForm.tsx" />
   </ItemGroup>

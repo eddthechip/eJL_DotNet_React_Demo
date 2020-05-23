@@ -12,3 +12,60 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.btn-tab {
+    color: black;
+    background-color: #f6c2c2;
+    border-color: #3e0202;
+    margin-right: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: larger;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.sector-nav-bar {
+    margin-bottom:-5px;
+}
+
+.btn-tab-active {
+    color: black;
+    background-color: white;
+    border-color: #3e0202;
+    margin-right: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: none;
+    font-size: larger;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.sector-record {
+    width: 900px;
+    height: 450px;
+    border-color: #3e0202;
+    border: 2px solid;
+    padding: 20px;
+}
+
+.input-list {
+    width: 500px;
+    height: 50px;
+}
+
+.time-picker {
+    float: right;
+    width: 350px;
+}
+
+.time-input {
+    width: 36px;
+    border: none;
+}
+
+.error-msg {
+    font-style: italic;
+    color: red;
+}
